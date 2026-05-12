@@ -1,6 +1,9 @@
 "use client";
 
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +15,7 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LocaleToggle } from "@/components/locale-toggle";
 import { MobileNav } from "@/components/app/mobile-nav";
-import { signOutAction } from "@/app/actions/auth";
+import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 import type { Dictionary, Locale } from "@/lib/i18n/dictionaries";
 
 export function Topbar({
@@ -26,6 +29,22 @@ export function Topbar({
   locale: Locale;
   orgName: string;
 }) {
+  const router = useRouter();
+  const [pending, start] = useTransition();
+
+  function handleSignOut() {
+    start(async () => {
+      const supabase = createSupabaseBrowserClient();
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      router.push("/login");
+      router.refresh();
+    });
+  }
+
   return (
     <header className="sticky top-0 z-20 flex h-14 items-center justify-between border-b bg-background/95 px-4 backdrop-blur md:px-6">
       <div className="flex items-center gap-2 md:hidden">
@@ -43,13 +62,16 @@ export function Topbar({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <form action={signOutAction}>
-                <button type="submit" className="flex w-full items-center gap-2">
-                  <LogOut className="h-4 w-4" />
-                  {dict.nav.signOut}
-                </button>
-              </form>
+            <DropdownMenuItem
+              disabled={pending}
+              onSelect={(e) => {
+                e.preventDefault();
+                handleSignOut();
+              }}
+              className="cursor-pointer"
+            >
+              <LogOut className="h-4 w-4 me-2" />
+              {dict.nav.signOut}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
