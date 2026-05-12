@@ -20,11 +20,12 @@ export function SignupForm({ dict }: { dict: Dictionary }) {
     e.preventDefault();
     start(async () => {
       const supabase = createSupabaseBrowserClient();
+      const appUrl = (process.env.NEXT_PUBLIC_APP_URL || window.location.origin).replace(/\/+$/, "");
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${appUrl}/auth/callback`,
         },
       });
       if (error) {
