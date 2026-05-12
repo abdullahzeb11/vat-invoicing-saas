@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     .maybeSingle();
   if (!membership) return new NextResponse("Forbidden", { status: 403 });
 
-  const origin = process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin;
+  const origin = (process.env.NEXT_PUBLIC_APP_URL || request.nextUrl.origin).replace(/\/+$/, "");
   const printUrl = `${origin}/invoices/${id}/print`;
   const cookieHeader = request.headers.get("cookie") ?? "";
 
