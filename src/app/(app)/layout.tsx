@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/app/sidebar";
 import { Topbar } from "@/components/app/topbar";
 import { requireOrgContext } from "@/lib/org-context";
@@ -6,8 +5,9 @@ import { getLocale } from "@/lib/i18n/cookie";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const ctx = await requireOrgContext().catch(() => null);
-  if (!ctx) redirect("/login");
+  // requireOrgContext throws NEXT_REDIRECT internally (to /login or /onboarding).
+  // Don't wrap it in .catch — that would swallow the redirect signal.
+  const ctx = await requireOrgContext();
   const locale = await getLocale();
   const t = getDictionary(locale);
 
