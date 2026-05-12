@@ -2,7 +2,17 @@
 
 A multi-tenant invoicing and inventory app aimed at Saudi small businesses. Issue VAT-compliant invoices, manage products and customers, and view monthly revenue.
 
-Built with Next.js 15 (App Router), TypeScript, Tailwind, shadcn-style UI primitives, Supabase (Auth + Postgres + RLS), and pdf-lib.
+Built with Next.js 15 (App Router), TypeScript, Tailwind, shadcn-style UI primitives, Supabase (Auth + Postgres + RLS), and headless Chrome for PDF rendering.
+
+## Try the live demo
+
+A pre-seeded demo account lets you skip signup and explore the app immediately.
+
+- **URL**: https://fawtara-invoicing.netlify.app
+- **Email**: `demo@fawtara.app`
+- **Password**: `DemoPass123!`
+
+The demo account already has a company set up, a few customers, products, and invoices — open the dashboard and click around. Please don't delete the seed data so the next visitor sees the same starting state. You can also sign up with your own email if you'd rather start from scratch (you'll get a confirmation email to verify).
 
 ## Features
 
