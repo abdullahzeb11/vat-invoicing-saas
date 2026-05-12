@@ -1,8 +1,10 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireOrgContext } from "@/lib/org-context";
 import { buildZatcaQrDataUrl } from "@/lib/zatca";
 import { formatNumber } from "@/lib/utils";
+import { AutoPrint, PrintTriggerButton } from "./auto-print";
 import type { Invoice, InvoiceItem, Customer } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -44,6 +46,10 @@ export default async function InvoicePrintPage({ params }: { params: Promise<{ i
   return (
     <div dir="ltr" className="print-root">
       <style>{printStyles}</style>
+      <Suspense fallback={null}>
+        <AutoPrint />
+      </Suspense>
+      <PrintTriggerButton label="Save as PDF" />
       <main className="sheet">
         <header className="head">
           <div className="brand">

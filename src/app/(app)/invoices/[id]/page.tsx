@@ -59,7 +59,7 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
             </Button>
           ) : null}
           <Button asChild variant="outline">
-            <a href={`/api/invoices/${invoice.id}/pdf`} target="_blank" rel="noreferrer">
+            <a href={`/invoices/${invoice.id}/print?print=1`} target="_blank" rel="noreferrer">
               <Download className="h-4 w-4" />
               {t.invoices.downloadPdf}
             </a>
