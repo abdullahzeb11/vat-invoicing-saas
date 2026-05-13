@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Organization } from "@/lib/types";
@@ -9,7 +10,9 @@ export interface OrgContext {
   role: "owner" | "admin" | "member";
 }
 
-export async function requireOrgContext(): Promise<OrgContext> {
+// React.cache memoizes the call within a single server request, so layout + page
+// + nested server components all share the same Supabase lookup.
+export const requireOrgContext = cache(async (): Promise<OrgContext> => {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -32,7 +35,7 @@ export async function requireOrgContext(): Promise<OrgContext> {
     organization: m.organization as unknown as Organization,
     role: m.role as OrgContext["role"],
   };
-}
+});
 
 export async function getOptionalUser() {
   const supabase = await createSupabaseServerClient();
