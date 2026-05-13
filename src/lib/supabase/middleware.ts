@@ -23,9 +23,13 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
+  // getSession reads from cookies — no network call to Supabase Auth.
+  // Server components still call auth.getUser() via requireOrgContext for proper
+  // server-side validation; this middleware only decides "redirect-or-not".
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+  const user = session?.user;
 
   const url = request.nextUrl.clone();
   const path = url.pathname;
